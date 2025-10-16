@@ -1,0 +1,52 @@
+  <script type="module">
+    // Import shared modules
+    import { ThemeGenerator, getStoredSchoolYear } from '../shared/theme-generator.js';
+    import { venues } from '../shared/venues.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
+    import { getDatabase, ref, set, get, update } from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js';
+
+    // Get school and year from URL
+    const params = new URLSearchParams(window.location.search);
+    const currentSchool = params.get('school');
+    const currentYear = params.get('year');
+
+    if (!currentSchool || !currentYear) {
+      window.location.href = '../index.html';
+    }
+
+    // Load and apply school theme
+    let schoolConfig, themeGen;
+    const schoolResponse = await fetch('../config/schools.json');
+    const schoolsData = await schoolResponse.json();
+    themeGen = new ThemeGenerator(schoolsData);
+    schoolConfig = themeGen.getSchool(currentSchool);
+    
+    if (!schoolConfig) {
+      window.location.href = '../index.html';
+    }
+
+    // Apply theme
+    themeGen.applyTheme(currentSchool);
+    document.body.style.background = themeGen.getGradientBackground(currentSchool);
+    document.title = `Vote - ${schoolConfig.name} Class of ${currentYear}`;
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAK7Te470i85jxeGjMRYUmu8Ia4O5lbnCk",
+      authDomain: "rhs-2005-reunion.firebaseapp.com",
+      projectId: "rhs-2005-reunion",
+      databaseURL: "https://rhs-2005-reunion-default-rtdb.firebaseio.com",
+      storageBucket: "rhs-2005-reunion.firebasestorage.app",
+      messagingSenderId: "1091668146336",
+      appId: "1:1091668146336:web:a1df9a8a4f2fa23d6e9e4c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // Multi-tenant vote storage paths
+    const votesPath = `votes/${currentSchool}/${currentYear}`;
+    const venueVotesRef = ref(database, `${votesPath}/venues`);
+    const dateVotesRef = ref(database, `${votesPath}/dates`);

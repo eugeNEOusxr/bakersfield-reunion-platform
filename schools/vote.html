@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote for Reunion Venue - RHS Class of 2005</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #4a148c 0%, #0a0a0a 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        font-size: 42px;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .header .subtitle {
+        font-size: 20px;
+        color: #ffd700;
+      }
+
+      .user-info {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        padding: 15px 20px;
+        color: white;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto 30px auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .user-info .user-email {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sign-out-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .sign-out-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .venues-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .venue-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .venue-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      .venue-card.featured {
+        grid-column: span 2;
+        background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+        color: white;
+      }
+
+      .venue-card.featured .venue-header {
+        background: rgba(255, 215, 0, 0.2);
+      }
+
+      .venue-card.voted {
+        border: 4px solid #ffd700;
+      }
+
+      .venue-header {
+        background: #4a148c;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .venue-card.featured .venue-header h2 {
+        color: #ffd700;
+      }
+
+      .venue-icon {
+        font-size: 50px;
+        margin-bottom: 10px;
+      }
+
+      .venue-name {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .venue-body {
+        padding: 25px;
+      }
+
+      .venue-card.featured .venue-body {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .venue-address {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 15px;
+        line-height: 1.5;
+      }
+
+      .venue-card.featured .venue-address {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .venue-description {
+        color: #333;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .venue-card.featured .venue-description {
+        color: white;
+        font-size: 16px;
+      }
+
+      .venue-links {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .venue-link {
+        flex: 1;
+        background: #f0f0f0;
+        color: #4a148c;
+        padding: 8px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .venue-card.featured .venue-link {
+        background: rgba(255, 215, 0, 0.3);
+        color: #ffd700;
+      }
+
+      .venue-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .vote-section {
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+      }
+
+      .venue-card.featured .vote-section {
+        border-top-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .vote-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .venue-card.featured .vote-stats {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .vote-bar {
+        background: #e0e0e0;
+        height: 10px;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 15px;
+      }
+
+      .venue-card.featured .vote-bar {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .vote-bar-fill {
+        background: linear-gradient(90deg, #4a148c 0%, #ffd700 100%);
+        height: 100%;
+        transition: width 0.5s ease;
+      }
+
+      .vote-btn {
+        width: 100%;
+        padding: 15px;
+        background: #4a148c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .vote-btn:hover {
+        background: #6a1b9a;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(74, 20, 140, 0.4);
+      }
+
+      .vote-btn.voted {
+        background: #ffd700;
+        color: #4a148c;
+      }
+
+      .vote-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .voted-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #ffd700;
+        color: #4a148c;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .info-banner {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .venue-details {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+
+      .venue-card.featured .venue-details {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .pricing-section {
+        background: rgba(74, 20, 140, 0.1);
+        border-left: 4px solid #ffd700;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+      }
+
+      .venue-card.featured .pricing-section {
+        background: rgba(255, 215, 0, 0.2);
+        border-left-color: white;
+      }
+
+      .pricing-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .price-main {
+        font-size: 24px;
+        font-weight: bold;
+        color: #4a148c;
+      }
+
+      .venue-card.featured .price-main {
+        color: #ffd700;
+      }
+
+      .price-per {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .venue-card.featured .price-per {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .pricing-includes {
+        font-size: 12px;
+        color: #888;
+        margin-top: 8px;
+      }
+
+      .venue-card.featured .pricing-includes {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .date-vote-btn {
+        background: #ffd700;
+        color: #4a148c;
+        padding: 12px 15px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-bottom: 15px;
+        font-size: 15px;
+      }
+
+      .venue-card.featured .date-vote-btn {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      .date-vote-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+      }
+
+      .venue-specs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .spec-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .venue-card.featured .spec-item {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .spec-icon {
+        font-size: 18px;
+      }
+
+      .floor-plan-btn {
+        background: #f0f0f0;
+        color: #4a148c;
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-bottom: 15px;
+      }
+
+      .venue-card.featured .floor-plan-btn {
+        background: rgba(255, 215, 0, 0.3);
+        color: #ffd700;
+      }
+
+      .floor-plan-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 15px;
+        max-width: 900px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 30px;
+        position: relative;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #f0f0f0;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 24px;
+        line-height: 1;
+        transition: all 0.3s ease;
+      }
+
+      .modal-close:hover {
+        background: #e0e0e0;
+        transform: rotate(90deg);
+      }
+
+      .modal h2 {
+        color: #4a148c;
+        margin-bottom: 20px;
+        font-size: 28px;
+      }
+
+      .floor-plan-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .floor-plan-item {
+        background: #f8f8f8;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+      }
+
+      .floor-plan-item h3 {
+        color: #4a148c;
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .floor-plan-item .capacity {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffd700;
+        margin: 10px 0;
+      }
+
+      .floor-plan-item ul {
+        text-align: left;
+        list-style: none;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      .floor-plan-item li:before {
+        content: "✓ ";
+        color: #4a148c;
+        font-weight: bold;
+      }
+
+      .date-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .date-card {
+        background: #f8f8f8;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .date-card:hover {
+        border-color: #4a148c;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(74, 20, 140, 0.2);
+      }
+
+      .date-card.selected {
+        background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+        border-color: #ffd700;
+        color: white;
+      }
+
+      .date-card .season {
+        font-size: 12px;
+        color: #ffd700;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .date-card .date-label {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .date-card .date-votes {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .date-card.selected .date-votes {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .date-vote-summary {
+        background: #f0f0f0;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .date-vote-summary h3 {
+        color: #4a148c;
+        margin-bottom: 15px;
+      }
+
+      @media (max-width: 768px) {
+        .venue-card.featured {
+          grid-column: span 1;
+        }
+
+        .user-info {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .venue-specs {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+  <!-- DYNAMIC THEMING INJECTION -->
+  <script type="module">
+    import { ThemeGenerator } from "../shared/theme-generator.js";
+    const params = new URLSearchParams(window.location.search);
+    const school = params.get("school") || "ridgeview";
+    const year = params.get("year") || "2005";
+    const response = await fetch("../config/schools.json");
+    const config = await response.json();
+    const themeGen = new ThemeGenerator(config);
+    const schoolData = themeGen.getSchool(school);
+    if (schoolData) {
+      themeGen.applyTheme(school);
+      document.body.style.background = themeGen.getGradientBackground(school);
+      document.querySelector(".header h1").innerHTML = `${schoolData.mascot} ${schoolData.name}<br><span style="font-size:0.6em">Class of ${year}</span>`;
+    }
+  </script>
+    // Auth check - redirect to login if not signed in
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        const school = new URLSearchParams(window.location.search).get("school") || "ridgeview";
+        const year = new URLSearchParams(window.location.search).get("year") || "2005";
+        window.location.href = `login.html?school=${school}&year=${year}`;
+      }
+    });
+    <div class="header">
+      <h1>🐺 Choose Our Reunion Venue</h1>
+      <p class="subtitle">RHS Class of 2005 - Wolfpack Forever!</p>
+    </div>
+
+    <div class="container">
+      <div class="user-info">
+        <div class="user-email">
+          <span>👤</span>
+          <span id="userEmail">Loading...</span>
+        </div>
+        <button class="sign-out-btn" id="signOutBtn">Sign Out</button>
+      </div>
+
+      <div class="info-banner">
+        <p><strong>Vote for your favorite venue!</strong> You can only vote once. Results update in real-time.</p>
+      </div>
+
+      <div class="venues-grid" id="venuesGrid">
+        <!-- Venues will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Floor Plan Modal -->
+    <div class="modal" id="floorPlanModal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="window.closeFloorPlan()">×</button>
+        <div id="floorPlanContent"></div>
+      </div>
+    </div>
+
+    <!-- Date Voting Modal -->
+    <div class="modal" id="dateVotingModal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="window.closeDateVoting()">×</button>
+        <div id="dateVotingContent"></div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
+
+      const venues = [
+        {
+          id: 'padre-hotel',
+          name: 'The Padre Hotel',
+          icon: '🏨',
+          address: '1702 18th St, Bakersfield, CA 93301',
+          description: "Bakersfield's #1 hotel since 1928—where oil barons closed deals and Hollywood stars kicked up their boots. This iconic Spanish Colonial Revival landmark blends historic elegance with modern luxury. Think rooftop bar, killer cocktails, and a vibe that says, 'Yeah, we made it.' Perfect for a reunion that's as legendary as our high school days.",
+          website: 'https://www.thepadrehotel.com/',
+          virtualTour: 'https://youriguide.com/4b87f3c7-c0d8-41c9-a728-711c1521a44a',
+          featured: true,
+          capacity: 250,
+          pricing: {
+            basePrice: 8500,
+            perPerson: 85,
+            includes: ['Venue rental', 'Full bar service', 'Rooftop access', 'Valet parking', 'A/V equipment']
+          },
+          availableDates: [
+            { id: 'padre-jul26', date: '2025-11-15', label: 'Saturday, November 15, 2025', season: 'Summer' },
+            { id: 'padre-aug15', date: '2025-11-22', label: 'Saturday, November 22, 2025', season: 'Summer' },
+            { id: 'padre-sep19', date: '2025-11-29', label: 'Saturday, November 29, 2025', season: 'Fall' },
+            { id: 'padre-oct10', date: '2025-12-06', label: 'Saturday, December 6, 2025', season: 'Fall' }
+          ],
+          specs: [
+            { icon: '👥', label: 'Capacity', value: '250 guests' },
+            { icon: '🍸', label: 'Bar', value: 'Full rooftop bar' },
+            { icon: '🎵', label: 'Music', value: 'Professional sound' },
+            { icon: '🅿️', label: 'Parking', value: 'Valet available' }
+          ],
+          floorPlans: [
+            {
+              name: 'Grand Ballroom',
+              capacity: 200,
+              features: ['Main event space', 'Stage area', 'Dance floor', 'Bar access', 'Historic charm']
+            },
+            {
+              name: 'Rooftop Terrace',
+              capacity: 100,
+              features: ['Outdoor space', 'City views', 'Cocktail lounge', 'Photo opportunities', 'Instagram-worthy']
+            },
+            {
+              name: 'Mezzanine Level',
+              capacity: 50,
+              features: ['Private area', 'VIP lounge', 'Quieter space', 'Meeting spot', 'Intimate setting']
+            }
+          ]
+        },
+        {
+          id: 'stockdale-country-club',
+          name: 'Stockdale Country Club',
+          icon: '⛳',
+          address: '7001 Stockdale Hwy, Bakersfield, CA 93309',
+          description: 'Since 1925, this member-owned private country club has been the standard for grace, charm, and excellence. Beautiful golf course views, award-winning catering, and a tradition of gracious living that spans nearly 100 years. A classy, sophisticated choice for our reunion.',
+          website: 'https://www.stockdalecc.com/',
+          virtualTour: 'https://www.stockdalecc.com/web/pages/home',
+          featured: false,
+          capacity: 300,
+          pricing: {
+            basePrice: 7500,
+            perPerson: 75,
+            includes: ['Venue rental', 'Premium catering', 'Full bar', 'Golf course views', 'Free parking']
+          },
+          availableDates: [
+            { id: 'stockdale-jul19', date: '2025-11-16', label: 'Sunday, November 16, 2025', season: 'Summer' },
+            { id: 'stockdale-aug22', date: '2025-11-23', label: 'Sunday, November 23, 2025', season: 'Summer' },
+            { id: 'stockdale-sep12', date: '2025-11-30', label: 'Sunday, November 30, 2025', season: 'Fall' },
+            { id: 'stockdale-oct17', date: '2025-12-07', label: 'Sunday, December 7, 2025', season: 'Fall' }
+          ],
+          specs: [
+            { icon: '👥', label: 'Capacity', value: '300 guests' },
+            { icon: '🍽️', label: 'Catering', value: 'Award-winning' },
+            { icon: '⛳', label: 'Views', value: 'Golf course' },
+            { icon: '🅿️', label: 'Parking', value: 'Ample free parking' }
+          ],
+          floorPlans: [
+            {
+              name: 'Main Ballroom',
+              capacity: 300,
+              features: ['Spacious layout', 'Elegant décor', 'Full catering', 'Dance floor', 'Golf course views']
+            },
+            {
+              name: 'Outdoor Patio',
+              capacity: 150,
+              features: ['Garden setting', 'Covered area', 'Sunset views', 'Cocktail space', 'Photo backdrop']
+            }
+          ]
+        },
+        {
+          id: 'rabobank-convention',
+          name: 'Rabobank Convention Center',
+          icon: '🏛️',
+          address: '1001 Truxtun Ave, Bakersfield, CA 93301',
+          description: 'Downtown convention center with spacious facilities, professional event services, and convenient parking. Perfect for larger gatherings with state-of-the-art A/V equipment, flexible layouts, and a central location.',
+          website: 'https://www.rabobankarena.com/',
+          virtualTour: 'https://www.google.com/maps/@35.3745,-119.0187,3a,75y,90t/data=!3m6!1e1!3m4!1sAF1QipNxxx!2e10!7i13312!8i6656',
+          featured: false,
+          capacity: 500,
+          pricing: {
+            basePrice: 9500,
+            perPerson: 65,
+            includes: ['Venue rental', 'Professional A/V', 'Stage setup', 'Parking access', 'Event staff']
+          },
+          availableDates: [
+            { id: 'rabobank-jul12', date: '2025-11-08', label: 'Saturday, November 8, 2025', season: 'Summer' },
+            { id: 'rabobank-aug29', date: '2025-11-29', label: 'Friday, November 29, 2025', season: 'Summer' },
+            { id: 'rabobank-sep26', date: '2025-12-13', label: 'Saturday, December 13, 2025', season: 'Fall' },
+            { id: 'rabobank-oct24', date: '2025-12-20', label: 'Saturday, December 20, 2025', season: 'Fall' }
+          ],
+          specs: [
+            { icon: '👥', label: 'Capacity', value: '500+ guests' },
+            { icon: '🎤', label: 'A/V', value: 'Professional equipment' },
+            { icon: '🏢', label: 'Location', value: 'Downtown central' },
+            { icon: '🅿️', label: 'Parking', value: 'Convention parking' }
+          ],
+          floorPlans: [
+            {
+              name: 'Grand Hall',
+              capacity: 500,
+              features: ['Massive space', 'High ceilings', 'Professional lighting', 'Stage setup', 'Flexible layout']
+            },
+            {
+              name: 'Break-Out Rooms',
+              capacity: 100,
+              features: ['Multiple rooms', 'Quiet areas', 'Meeting spaces', 'Lounge zones', 'Customizable']
+            }
+          ]
+        },
+        {
+          id: 'seven-oaks',
+          name: 'Seven Oaks Country Club',
+          icon: '🌳',
+          address: '1300 Clubhouse Dr, Bakersfield, CA 93308',
+          description: 'Picturesque country club with lush landscapes, premium fine dining, and a relaxed yet upscale ambiance. Natural beauty meets sophisticated elegance with garden terraces and modern facilities.',
+          website: 'https://www.sevenoaksclub.com/',
+          virtualTour: 'https://www.google.com/maps/@35.3456,-118.9876,3a,75y,90t/data=!3m6!1e1!3m4!1sAF1QipNyyy!2e10!7i13312!8i6656',
+          featured: false,
+          capacity: 275,
+          pricing: {
+            basePrice: 8000,
+            perPerson: 80,
+            includes: ['Venue rental', 'Fine dining', 'Garden access', 'Bar service', 'Free parking']
+          },
+          availableDates: [
+            { id: 'sevenoaks-jul05', date: '2025-11-09', label: 'Sunday, November 9, 2025', season: 'Summer' },
+            { id: 'sevenoaks-aug08', date: '2025-11-22', label: 'Saturday, November 22, 2025', season: 'Summer' },
+            { id: 'sevenoaks-sep05', date: '2025-12-06', label: 'Saturday, December 6, 2025', season: 'Fall' },
+            { id: 'sevenoaks-oct31', date: '2025-12-13', label: 'Saturday, December 13, 2025', season: 'Fall' }
+          ],
+          specs: [
+            { icon: '👥', label: 'Capacity', value: '275 guests' },
+            { icon: '🌳', label: 'Setting', value: 'Lush gardens' },
+            { icon: '🍷', label: 'Dining', value: 'Fine cuisine' },
+            { icon: '🅿️', label: 'Parking', value: 'Free on-site' }
+          ],
+          floorPlans: [
+            {
+              name: 'Clubhouse Ballroom',
+              capacity: 275,
+              features: ['Upscale atmosphere', 'Premium catering', 'Dance floor', 'Bar service', 'Elegant design']
+            },
+            {
+              name: 'Garden Terrace',
+              capacity: 125,
+              features: ['Outdoor space', 'Natural beauty', 'Covered pavilion', 'Romantic setting', 'Photo spots']
+            }
+          ]
+        }
+      ];
+
+      let currentUser = null;
+      let currentUserId = null;
+
+      // Check authentication
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          document.getElementById('userEmail').textContent = user.email;
+
+          // Generate user ID
+          currentUserId = await generateUserId(user.email);
+
+          // Load and display venues
+          loadVenues();
+
+          // Start vote count refresh
+          setInterval(updateVoteCounts, 5000);
+
+        } else {
+          // Not signed in, redirect to sign-in page
+          window.location.href = 'signup-google.html';
+        }
+      });
+
+      // Sign out handler
+      document.getElementById('signOutBtn').addEventListener('click', async () => {
+        try {
+          await signOut(auth);
+          localStorage.removeItem('rhsVoterId');
+          localStorage.removeItem('rhsVoterSignedIn');
+          localStorage.removeItem('rhsVoterTimestamp');
+          window.location.href = 'signup-google.html';
+        } catch (error) {
+          console.error('Sign out error:', error);
+          alert('Failed to sign out. Please try again.');
+        }
+      });
+
+      function loadVenues() {
+        const grid = document.getElementById('venuesGrid');
+        grid.innerHTML = '';
+
+        const myVote = getMyVote();
+
+        venues.forEach(venue => {
+          const card = createVenueCard(venue, myVote);
+          grid.appendChild(card);
+        });
+
+        updateVoteCounts();
+      }
+
+      function createVenueCard(venue, myVote) {
+        const card = document.createElement('div');
+        card.className = 'venue-card';
+        if (venue.featured) card.classList.add('featured');
+        if (myVote === venue.id) card.classList.add('voted');
+
+        const links = venue.website || venue.virtualTour ? `
+                <div class="venue-links">
+                    ${venue.website ? `<a href="${venue.website}" target="_blank" class="venue-link">🌐 Website</a>` : ''}
+                    ${venue.virtualTour ? `<a href="${venue.virtualTour}" target="_blank" class="venue-link">🏛️ Virtual Tour</a>` : ''}
+                </div>
+            ` : '';
+
+        const specs = venue.specs ? `
+                <div class="venue-details">
+                    ${venue.pricing ? `
+                        <div class="pricing-section">
+                            <div class="pricing-header">
+                                <div>
+                                    <div class="price-main">$${venue.pricing.basePrice.toLocaleString()}</div>
+                                    <div class="price-per">+ $${venue.pricing.perPerson}/person</div>
+                                </div>
+                            </div>
+                            <div class="pricing-includes">
+                                Includes: ${venue.pricing.includes.join(', ')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    <div class="venue-specs">
+                        ${venue.specs.map(spec => `
+                            <div class="spec-item">
+                                <span class="spec-icon">${spec.icon}</span>
+                                <span><strong>${spec.label}:</strong> ${spec.value}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${venue.availableDates ? `
+                        <button class="date-vote-btn" onclick="window.showDateVoting('${venue.id}')">
+                            📅 Vote for Preferred Date
+                        </button>
+                    ` : ''}
+                    <button class="floor-plan-btn" onclick="window.showFloorPlan('${venue.id}')">
+                        📐 View Floor Plans & Details
+                    </button>
+                </div>
+            ` : '';
+
+        card.innerHTML = `
+                ${myVote === venue.id ? '<div class="voted-badge">✓ Your Vote</div>' : ''}
+                <div class="venue-header">
+                    <div class="venue-icon">${venue.icon}</div>
+                    <div class="venue-name">${venue.name}</div>
+                </div>
+                <div class="venue-body">
+                    <div class="venue-address">${venue.address}</div>
+                    <div class="venue-description">${venue.description}</div>
+                    ${links}
+                    ${specs}
+                    <div class="vote-section">
+                        <div class="vote-stats">
+                            <span class="vote-count" data-venue="${venue.id}">0 votes</span>
+                            <span class="vote-percent" data-venue="${venue.id}">0%</span>
+                        </div>
+                        <div class="vote-bar">
+                            <div class="vote-bar-fill" data-venue="${venue.id}" style="width: 0%"></div>
+                        </div>
+                        <button class="vote-btn ${myVote === venue.id ? 'voted' : ''}" 
+                                onclick="window.handleVote('${venue.id}')"
+                                ${myVote ? 'disabled' : ''}>
+                            ${myVote === venue.id ? '✓ You Voted for This' : myVote ? 'Already Voted' : 'Vote for This Venue'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+        return card;
+      }
+
+      window.handleVote = async function (venueId) {
+        if (!currentUserId) {
+          alert('Please wait, loading your profile...');
+          return;
+        }
+
+        const myVote = getMyVote();
+        if (myVote) {
+          alert('You have already voted! You can only vote once.');
+          return;
+        }
+
+        try {
+          await castVote(venueId);
+          loadVenues();
+        } catch (error) {
+          console.error('Vote error:', error);
+          alert('Failed to cast vote. Please try again.');
+        }
+      };
+
+      async function castVote(venueId) {
+        const vote = {
+          userId: currentUserId,
+          venueId: venueId,
+          timestamp: new Date().toISOString(),
+          userEmail: currentUser.email // Store for admin purposes only
+        };
+
+        // Get existing votes
+        const votes = JSON.parse(localStorage.getItem('rhsVotes') || '[]');
+
+        // Add new vote
+        votes.push(vote);
+        localStorage.setItem('rhsVotes', JSON.stringify(votes));
+
+        // Store user's vote
+        localStorage.setItem('rhsMyVote', venueId);
+
+        console.log('Vote cast successfully:', venueId);
+      }
+
+      function getMyVote() {
+        return localStorage.getItem('rhsMyVote');
+      }
+
+      function getVotesForVenue(venueId) {
+        const votes = JSON.parse(localStorage.getItem('rhsVotes') || '[]');
+        return votes.filter(v => v.venueId === venueId).length;
+      }
+
+      function getTotalVotes() {
+        const votes = JSON.parse(localStorage.getItem('rhsVotes') || '[]');
+        return votes.length;
+      }
+
+      function updateVoteCounts() {
+        const total = getTotalVotes();
+
+        venues.forEach(venue => {
+          const count = getVotesForVenue(venue.id);
+          const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+
+          // Update count
+          const countEl = document.querySelector(`.vote-count[data-venue="${venue.id}"]`);
+          if (countEl) {
+            countEl.textContent = `${count} vote${count !== 1 ? 's' : ''}`;
+          }
+
+          // Update percentage
+          const percentEl = document.querySelector(`.vote-percent[data-venue="${venue.id}"]`);
+          if (percentEl) {
+            percentEl.textContent = `${percent}%`;
+          }
+
+          // Update bar
+          const barEl = document.querySelector(`.vote-bar-fill[data-venue="${venue.id}"]`);
+          if (barEl) {
+            barEl.style.width = `${percent}%`;
+          }
+        });
+      }
+
+      // Generate SHA-256 hash of email
+      async function generateUserId(email) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(email.toLowerCase().trim());
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex.substring(0, 16);
+      }
+
+      // Floor plan modal functions
+      window.showFloorPlan = function (venueId) {
+        const venue = venues.find(v => v.id === venueId);
+        if (!venue) return;
+
+        const modal = document.getElementById('floorPlanModal');
+        const content = document.getElementById('floorPlanContent');
+
+        content.innerHTML = `
+          <h2>${venue.icon} ${venue.name}</h2>
+          <p style="color: #666; margin-bottom: 30px; font-size: 16px;">
+            <strong>Total Capacity:</strong> ${venue.capacity} guests
+          </p>
+          
+          <div class="floor-plan-grid">
+            ${venue.floorPlans.map(plan => `
+              <div class="floor-plan-item">
+                <h3>${plan.name}</h3>
+                <div class="capacity">${plan.capacity} guests</div>
+                <ul>
+                  ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+                </ul>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="background: #f0f0f0; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <h3 style="color: #4a148c; margin-bottom: 15px;">📍 Location & Details</h3>
+            <p style="color: #666; line-height: 1.8;">
+              <strong>Address:</strong> ${venue.address}<br>
+              ${venue.description}
+            </p>
+            ${venue.website || venue.virtualTour ? `
+              <div style="display: flex; gap: 10px; margin-top: 15px;">
+                ${venue.website ? `<a href="${venue.website}" target="_blank" style="flex: 1; background: #4a148c; color: white; padding: 10px; border-radius: 5px; text-decoration: none; text-align: center;">🌐 Visit Website</a>` : ''}
+                ${venue.virtualTour ? `<a href="${venue.virtualTour}" target="_blank" style="flex: 1; background: #ffd700; color: #4a148c; padding: 10px; border-radius: 5px; text-decoration: none; text-align: center;">🏛️ Virtual Tour</a>` : ''}
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        modal.classList.add('active');
+      };
+
+      window.closeFloorPlan = function () {
+        const modal = document.getElementById('floorPlanModal');
+        modal.classList.remove('active');
+      };
+
+      // Date voting functions
+      window.showDateVoting = function (venueId) {
+        const venue = venues.find(v => v.id === venueId);
+        if (!venue || !venue.availableDates) return;
+
+        const modal = document.getElementById('dateVotingModal');
+        const content = document.getElementById('dateVotingContent');
+
+        const myDateVote = getMyDateVote(venueId);
+
+        content.innerHTML = `
+          <h2>📅 Choose Your Preferred Date</h2>
+          <p style="color: #666; margin-bottom: 30px; font-size: 16px;">
+            <strong>${venue.icon} ${venue.name}</strong><br>
+            Select the date that works best for you. You can vote for a date for each venue!
+          </p>
+          
+          <div class="date-grid">
+            ${venue.availableDates.map(dateOption => {
+          const votes = getVotesForDate(dateOption.id);
+          const totalDateVotes = getTotalDateVotesForVenue(venueId);
+          const percent = totalDateVotes > 0 ? Math.round((votes / totalDateVotes) * 100) : 0;
+          const isMyVote = myDateVote === dateOption.id;
+
+          return `
+                <div class="date-card ${isMyVote ? 'selected' : ''}" onclick="window.voteForDate('${venueId}', '${dateOption.id}')">
+                  <div class="season">${dateOption.season}</div>
+                  <div class="date-label">${dateOption.label}</div>
+                  <div class="date-votes">
+                    ${votes} vote${votes !== 1 ? 's' : ''} (${percent}%)
+                    ${isMyVote ? '<br>✓ Your Choice' : ''}
+                  </div>
+                </div>
+              `;
+        }).join('')}
+          </div>
+
+          <div class="date-vote-summary">
+            <h3>💰 Estimated Cost for 200 Guests</h3>
+            <p style="color: #666; font-size: 18px; font-weight: bold;">
+              $${(venue.pricing.basePrice + (venue.pricing.perPerson * 200)).toLocaleString()}
+            </p>
+            <p style="color: #888; font-size: 14px; margin-top: 10px;">
+              Base: $${venue.pricing.basePrice.toLocaleString()} + (200 × $${venue.pricing.perPerson})
+            </p>
+          </div>
+        `;
+
+        modal.classList.add('active');
+      };
+
+      window.closeDateVoting = function () {
+        const modal = document.getElementById('dateVotingModal');
+        modal.classList.remove('active');
+      };
+
+      window.voteForDate = function (venueId, dateId) {
+        if (!currentUserId) {
+          alert('Please wait, loading your profile...');
+          return;
+        }
+
+        const dateVote = {
+          userId: currentUserId,
+          venueId: venueId,
+          dateId: dateId,
+          timestamp: new Date().toISOString()
+        };
+
+        // Get existing date votes
+        const dateVotes = JSON.parse(localStorage.getItem('rhsDateVotes') || '[]');
+
+        // Remove any previous vote for this venue by this user
+        const filtered = dateVotes.filter(v => !(v.userId === currentUserId && v.venueId === venueId));
+
+        // Add new vote
+        filtered.push(dateVote);
+        localStorage.setItem('rhsDateVotes', JSON.stringify(filtered));
+
+        console.log('Date vote cast:', dateId);
+
+        // Refresh the modal
+        window.showDateVoting(venueId);
+      };
+
+      function getMyDateVote(venueId) {
+        const dateVotes = JSON.parse(localStorage.getItem('rhsDateVotes') || '[]');
+        const myVote = dateVotes.find(v => v.userId === currentUserId && v.venueId === venueId);
+        return myVote ? myVote.dateId : null;
+      }
+
+      function getVotesForDate(dateId) {
+        const dateVotes = JSON.parse(localStorage.getItem('rhsDateVotes') || '[]');
+        return dateVotes.filter(v => v.dateId === dateId).length;
+      }
+
+      function getTotalDateVotesForVenue(venueId) {
+        const dateVotes = JSON.parse(localStorage.getItem('rhsDateVotes') || '[]');
+        return dateVotes.filter(v => v.venueId === venueId).length;
+      }
+
+      // Close modal when clicking outside
+      document.addEventListener('click', (e) => {
+        const floorModal = document.getElementById('floorPlanModal');
+        const dateModal = document.getElementById('dateVotingModal');
+
+        if (e.target === floorModal) {
+          window.closeFloorPlan();
+        }
+        if (e.target === dateModal) {
+          window.closeDateVoting();
+        }
+      });
+    </script>
+  </body>
+
+</html>

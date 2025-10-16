@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakersfield Reunion Voting Platform</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 60px;
+      }
+
+      .header h1 {
+        font-size: 48px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 20px;
+        opacity: 0.9;
+      }
+
+      .schools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .school-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border: 3px solid transparent;
+      }
+
+      .school-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .mascot {
+        font-size: 80px;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .school-name {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .mascot-name {
+        font-size: 16px;
+        opacity: 0.7;
+        margin-bottom: 20px;
+      }
+
+      .established {
+        font-size: 14px;
+        opacity: 0.5;
+        margin-top: 10px;
+      }
+
+      .cta-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 30px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .cta-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .footer {
+        text-align: center;
+        color: white;
+        margin-top: 80px;
+        opacity: 0.7;
+        font-size: 14px;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 32px;
+        }
+
+        .schools-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎓 Bakersfield Reunion Voting</h1>
+        <p>Select your high school to get started</p>
+      </div>
+
+      <div id="schools-grid" class="schools-grid">
+        <!-- Schools will be dynamically loaded here -->
+      </div>
+
+      <div class="footer">
+        <p>Powered by Bakersfield Reunion Platform • All Rights Reserved © 2025</p>
+      </div>
+    </div>
+
+    <script type="module">
+      import { ThemeGenerator } from './shared/theme-generator.js';
+
+      // Load school configuration
+      async function loadSchools() {
+        const response = await fetch('./config/schools.json');
+        const schoolsConfig = await response.json();
+
+        const themeGen = new ThemeGenerator(schoolsConfig);
+        const schools = themeGen.getAllSchools();
+
+        const grid = document.getElementById('schools-grid');
+
+        schools.forEach(school => {
+          const card = document.createElement('div');
+          card.className = 'school-card';
+          card.style.borderColor = school.colors.primary;
+
+          card.innerHTML = `
+          <span class="mascot">${school.mascot}</span>
+          <div class="school-name" style="color: ${school.colors.primary}">${school.name}</div>
+          <div class="mascot-name" style="color: ${school.colors.secondary}">${school.mascotName}</div>
+          <button class="cta-button" style="background: linear-gradient(135deg, ${school.colors.primary} 0%, ${school.colors.secondary} 100%)">
+            Select School
+          </button>
+          <div class="established">Est. ${school.established}</div>
+        `;
+
+          card.addEventListener('click', () => {
+            // Redirect to year selection page
+            window.location.href = `year-selector.html?school=${school.id}`;
+          });
+
+          grid.appendChild(card);
+        });
+      }
+
+      loadSchools();
+    </script>
+  </body>
+
+</html>
