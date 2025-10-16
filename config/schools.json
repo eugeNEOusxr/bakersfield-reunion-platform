@@ -83,7 +83,7 @@
   },
   "stockdale": {
     "name": "Stockdale High School",
-    "mascot": "🐻",
+    "mascot": "�",
     "mascotName": "Mustangs",
     "colors": {
       "primary": "#003087",
@@ -122,7 +122,7 @@
   },
   "garces": {
     "name": "Garces Memorial High School",
-    "mascot": "🦅",
+    "mascot": "🐏",
     "mascotName": "Rams",
     "colors": {
       "primary": "#00205B",
@@ -267,7 +267,7 @@
   },
   "frontier": {
     "name": "Frontier High School",
-    "mascot": "🦬",
+    "mascot": "⚡",
     "mascotName": "Titans",
     "colors": {
       "primary": "#6A1B4D",
